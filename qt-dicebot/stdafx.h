@@ -12,6 +12,6 @@
 #include <windows.h>
 #include <time.h>
 #include <sstream>
-
+#include <random>
 
 // TODO:  在此处引用程序需要的其他头文件

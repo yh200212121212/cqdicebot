@@ -2,13 +2,11 @@
 #include "string"
 #include "cqp.h"
 #include "appmain.h" //应用AppID等信息，请正确填写，否则酷Q可能无法加载
-#include "MersenneTwister.h"
 using namespace std;
 
 int authcode = -1; //AuthCode 调用酷Q的方法时需要用到
 bool enabled = false;
-MersenneTwister * mt_rand = NULL;
-
+mt19937 * mtrand = NULL;
 CQEVENT(const char*, AppInfo, 0)() {
 	return CQAPPINFO;
 }
@@ -20,13 +18,14 @@ CQEVENT(int32_t, Initialize, 4)(int32_t AuthCode) {
 
 //Type=1001 酷Q启动
 CQEVENT(int32_t, __eventStartup, 0)() {
-	mt_rand = new MersenneTwister((int)time(NULL));
+	random_device rdd;
+	mtrand = new mt19937(rdd());
 	return 0;
 }
 
 //Type=1002 酷Q退出
 CQEVENT(int32_t, __eventExit, 0)() {
-	free(mt_rand);
+	free(mtrand);
 	return 0;
 }
 
@@ -64,7 +63,8 @@ CQEVENT(int32_t, __eventGroupMsg, 36)(int32_t subType, int32_t sendTime, int64_t
 CQEVENT(int32_t, __eventDiscussMsg, 32)(int32_t subType, int32_t sendTime, int64_t fromDiscuss, int64_t fromQQ, const char *msg, int32_t font) {
 
 	if(!enabled) return EVENT_IGNORE; //关于返回值说明, 见“_eventPrivateMsg”函数
-	int random_int = mt_rand->rand();
+	
+	unsigned int random_int = (*mtrand)();
 	stringstream ret;
 	ret << random_int;
 	CQ_sendDiscussMsg(authcode, fromDiscuss, ret.str().c_str());
