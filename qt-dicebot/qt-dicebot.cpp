@@ -36,7 +36,6 @@ CQEVENT(int32_t, __eventEnable, 0)() {
 	return 0;
 }
 
-
 //Type=1004 应用将被停用
 CQEVENT(int32_t, __eventDisable, 0)() {
 	enabled = false;
@@ -70,62 +69,4 @@ CQEVENT(int32_t, __eventDiscussMsg, 32)(int32_t subType, int32_t sendTime, int64
 	ret << random_int;
 	CQ_sendDiscussMsg(authcode, fromDiscuss, ret.str().c_str());
 	return EVENT_BLOCK;
-}
-
-//Type=101 群事件-管理员变动
-//subType 子类型，1/被取消管理员 2/被设置管理员
-CQEVENT(int32_t, __eventSystem_GroupAdmin, 24)(int32_t subType, int32_t sendTime, int64_t fromGroup, int64_t beingOperateQQ) {
-	return EVENT_IGNORE; //关于返回值说明, 见“_eventPrivateMsg”函数
-}
-
-//Type=102 群事件-群成员减少
-//subType 子类型，1/群员离开 2/群员被踢 3/自己(即登录号)被踢
-//fromQQ 操作者QQ(仅subType为2、3时存在)
-//beingOperateQQ 被操作QQ
-CQEVENT(int32_t, __eventSystem_GroupMemberDecrease, 32)(int32_t subType, int32_t sendTime, int64_t fromGroup, int64_t fromQQ, int64_t beingOperateQQ) {
-
-	return EVENT_IGNORE; //关于返回值说明, 见“_eventPrivateMsg”函数
-}
-
-//Type=103 群事件-群成员增加
-//subType 子类型，1/管理员已同意 2/管理员邀请
-//fromQQ 操作者QQ(即管理员QQ)
-//beingOperateQQ 被操作QQ(即加群的QQ)
-CQEVENT(int32_t, __eventSystem_GroupMemberIncrease, 32)(int32_t subType, int32_t sendTime, int64_t fromGroup, int64_t fromQQ, int64_t beingOperateQQ) {
-
-	return EVENT_IGNORE; //关于返回值说明, 见“_eventPrivateMsg”函数
-}
-
-//Type=201 好友事件-好友已添加
-CQEVENT(int32_t, __eventFriend_Add, 16)(int32_t subType, int32_t sendTime, int64_t fromQQ) {
-
-	return EVENT_IGNORE; //关于返回值说明, 见“_eventPrivateMsg”函数
-}
-
-//Type=301 请求-好友添加
-//msg 附言
-//responseFlag 反馈标识(处理请求用)
-CQEVENT(int32_t, __eventRequest_AddFriend, 24)(int32_t subType, int32_t sendTime, int64_t fromQQ, const char *msg, const char *responseFlag) {
-
-	//CQ_setFriendAddRequest(ac, responseFlag, REQUEST_ALLOW, "");
-
-	return EVENT_IGNORE; //关于返回值说明, 见“_eventPrivateMsg”函数
-}
-
-
-/*
-* Type=302 请求-群添加
-* subType 子类型，1/他人申请入群 2/自己(即登录号)受邀入群
-* msg 附言
-* responseFlag 反馈标识(处理请求用)
-*/
-CQEVENT(int32_t, __eventRequest_AddGroup, 32)(int32_t subType, int32_t sendTime, int64_t fromGroup, int64_t fromQQ, const char *msg, const char *responseFlag) {
-
-	//if (subType == 1) {
-	//	CQ_setGroupAddRequestV2(ac, responseFlag, REQUEST_GROUPADD, REQUEST_ALLOW, "");
-	//} else if (subType == 2) {
-	//	CQ_setGroupAddRequestV2(ac, responseFlag, REQUEST_GROUPINVITE, REQUEST_ALLOW, "");
-	//}
-
-	return EVENT_IGNORE; //关于返回值说明, 见“_eventPrivateMsg”函数
 }

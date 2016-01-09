@@ -1,7 +1,7 @@
 {
     "ret":1,
     "apiver":9,
-    "appid":"com.gmail.dyniath.dicebot",
+    "appid":"dynilath.cq.dicebot",
     "name":"骰子工具",
     "version":"1.0.0",
     "version_id":1,
@@ -27,48 +27,6 @@
             "type":4,
             "name":"讨论组消息处理",
             "function":"_eventDiscussMsg",
-            "priority":30000
-        },
-        {
-            "id":5,
-            "type":101,
-            "name":"群管理变动事件处理",
-            "function":"_eventSystem_GroupAdmin",
-            "priority":30000
-        },
-        {
-            "id":6,
-            "type":102,
-            "name":"群成员减少事件处理",
-            "function":"_eventSystem_GroupMemberDecrease",
-            "priority":30000
-        },
-        {
-            "id":7,
-            "type":103,
-            "name":"群成员增加事件处理",
-            "function":"_eventSystem_GroupMemberIncrease",
-            "priority":30000
-        },
-        {
-            "id":10,
-            "type":201,
-            "name":"好友已添加事件处理",
-            "function":"_eventFriend_Add",
-            "priority":30000
-        },
-        {
-            "id":8,
-            "type":301,
-            "name":"好友添加请求处理",
-            "function":"_eventRequest_AddFriend",
-            "priority":30000
-        },
-        {
-            "id":9,
-            "type":302,
-            "name":"群添加请求处理",
-            "function":"_eventRequest_AddGroup",
             "priority":30000
         },
         {
@@ -107,20 +65,6 @@
     "auth":[
         101,
         103,
-        106,
-        110,
-        120,
-        121,
-        122,
-        123,
-        124,
-        125,
-        126,
-        128,
-        130,
-        131,
-        140,
-        150,
-        151
+        106
     ]
 }

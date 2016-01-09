@@ -1,3 +1,3 @@
 #pragma once
-#define CQAPPID "com.gmail.dynilath.qtdicebot"
+#define CQAPPID "dynilath.cq.dicebot"
 #define CQAPPINFO CQAPIVERTEXT "," CQAPPID

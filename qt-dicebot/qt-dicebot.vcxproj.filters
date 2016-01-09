@@ -49,6 +49,6 @@
     <Library Include="CQP.lib" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="com.gmail.dynilath.qtdicebot.json" />
+    <None Include="dynilath.cq.dicebot.json" />
   </ItemGroup>
 </Project>
