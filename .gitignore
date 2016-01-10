@@ -196,3 +196,4 @@ FakesAssemblies/
 *.opt
 qt-dicebot/ReadMe.txt
 qt-dicebot.VC.opendb
+cqdicebot.VC.opendb

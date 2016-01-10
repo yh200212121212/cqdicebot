@@ -27,15 +27,12 @@
     <ClInclude Include="cqp.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="appmain.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="qt-dicebot.cpp">
+    <ClCompile Include="cqdicebot.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="dllmain.cpp">
