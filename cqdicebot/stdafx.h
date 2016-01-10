@@ -10,9 +10,11 @@
 #define WIN32_LEAN_AND_MEAN             // 从 Windows 头中排除极少使用的资料
 // Windows 头文件: 
 #include <windows.h>
+
+// TODO:  在此处引用程序需要的其他头文件
 #include <time.h>
 #include <sstream>
 #include <random>
-
-
-// TODO:  在此处引用程序需要的其他头文件
+#include <string>
+#include "cqp.h"
+#include "appmain.h"
