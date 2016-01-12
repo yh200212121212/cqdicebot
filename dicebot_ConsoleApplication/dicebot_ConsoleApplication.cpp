@@ -3,6 +3,7 @@
 
 #include "stdafx.h"
 #include <diceSet.h>
+#include <diceStringParser.h>
 #include <iostream>
 #include <string>
 using namespace std;
@@ -10,13 +11,24 @@ using namespace std;
 int main()
 {
 	diceSet ds1;
-	string rollstring = "5d100k4+1d200+12";
-	
-	while (rollstring.length() > 0) {
-		ds1.getDice(&rollstring);
-		cout << ds1.display() << endl;
-	}
 
+
+	string rollstring = ".r5d100k4+1d200+12hhhhhhhhh";
+
+	diceStringParser dsp;
+	dsp.Parse(rollstring.c_str());
+
+	if (dsp.getStatus() == PARSE_FINISHED_SUCCESSFULLY) {
+		list<diceSet>::iterator itor;
+		list<diceSet> dicelist = dsp.getDice();
+		itor = dicelist.begin();
+		while (itor != dicelist.end())
+		{
+			cout << (*itor).display() << endl;
+			itor++;
+		}
+		cout << dsp.getName();
+	}
 
 	getchar();
 	return 0;

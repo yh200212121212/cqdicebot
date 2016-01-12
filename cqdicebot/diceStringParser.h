@@ -19,17 +19,10 @@ String parser specified for .r command and so on.
 class diceStringParser
 {
 private:
-	string ret;
 	int status = PARSE_STANDBY;
 	int mode = PARSE_MODE_ROLL;
 	string roll_name;
-	string roll_list;
 	list<diceSet> diceseries;
-
-	int getDice(diceSet &ds) {
-
-	}
-
 public:
 	diceStringParser() {
 
@@ -59,18 +52,14 @@ public:
 		int input_trim_length = input_trim.length();
 
 		if (input_trim.length() < 3) { status = PARSE_ERROR_ILL_INPUT; return status; }
-
-		//.r1d10abcde
-		//command_end = 1
-		//roll_name_loc = 5
-		//input_ori_length = 11
-		//
+		
 		size_t command_end = input_trim.find_first_of("1234567890+-") - 1;
 		if(command_end == string::npos) { status = PARSE_ERROR_ILL_INPUT; return status; }
 		string command = input_trim.substr(0, command_end + 1);
 
 		if (command.compare(".r") == 0
 			|| command.compare(".R") == 0) {
+			string roll_list;
 			mode = PARSE_MODE_ROLL;
 			int roll_name_loc = input_ori.find_last_of("1234567890") + 1;
 			if (roll_name_loc < input_ori_length) { roll_name = input_trim.substr(roll_name_loc, input_ori_length - roll_name_loc - 1); }
@@ -80,10 +69,11 @@ public:
 			diceSet ds;
 			while (roll_list.length() > 0)
 			{
-				int lap = ds.getDice(roll_list);
+				int lap = ds.getDice(&roll_list);
 				if (lap == diceSet::GETDICE_FAIL) continue;
 				else diceseries.push_back(ds);
 			};
+			status = PARSE_FINISHED_SUCCESSFULLY;
 		}
 		else if (command.compare(".h") == 0
 			|| command.compare(".H") == 0) {
@@ -95,8 +85,9 @@ public:
 			mode = PARSE_MODE_ROLL;
 		}
 		else {
-			status = PARSE_ERROR_ILL_INPUT; return status;
+			status = PARSE_ERROR_ILL_INPUT; 
 		}
+		return status;
 	};
 	/*
 	Get parse status.
@@ -107,9 +98,10 @@ public:
 	/*
 	Get parse result.
 	*/
-	string getResult() {
-		if (status == PARSE_STANDBY) return NULL;
-		if (status&PARSE_FINISHED_ERROR) return NULL;
-		return ret;
-	};
+	list<diceSet> getDice() {
+		return diceseries;
+	}
+	string getName() {
+		return roll_name;
+	}
 };
