@@ -11,10 +11,11 @@ using namespace std;
 int main()
 {
 	diceSet ds1;
-
-
 	string rollstring = ".r5d100k4+1d200+12hhhhhhhhh";
 
+
+	cout << atoi(" 1000 ");
+	/*
 	diceStringParser dsp;
 	dsp.Parse(rollstring.c_str());
 
@@ -29,7 +30,7 @@ int main()
 		}
 		cout << dsp.getName();
 	}
-
+	*/
 	getchar();
 	return 0;
 }

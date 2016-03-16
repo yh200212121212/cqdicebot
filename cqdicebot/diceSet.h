@@ -1,6 +1,7 @@
 #pragma once
 #include <random>
 #include <string>
+#include "mystring.h"
 using namespace std;
 
 random_device rdd;
@@ -9,6 +10,8 @@ mt19937 mtrand(rdd());
 #define MAX_DICE 100
 #define MAX_FACE 1000
 
+#define GETDICE_DONE 0
+#define GETDICE_FAIL 1
 /*
 A single dice roll, for example +4d6, -8d6k3.
 */
@@ -20,8 +23,6 @@ private:
 	int numOfFaces;
 	int numOfKeep;
 public:
-	const static int GETDICE_DONE = 0;
-	const static int GETDICE_FAIL = 1;
 
 	diceSet() {
 		sign = 1;
@@ -71,9 +72,91 @@ public:
 		return (ret * sign);
 	}
 
-	int getDice(string * str) {
+	int getDice(string * str,bool isFirst) {
+		size_t split;
+		size_t pos_of_d, pos_of_k;
+		size_t dice_end;
+		int sign = 1, dice = 1, face = 6, keep = -1;
+
 		if (str->length() < 3) {
-			str->clear(); return GETDICE_FAIL;
+			return GETDICE_FAIL;
+		}
+
+		split = str->find_first_of("+-", 1);
+		if (split == string::npos) {
+			pos_of_d = str->find_first_of("d", 0);
+			if (pos_of_d == string::npos) {
+				split = str->find_first_not_of(' ');
+				switch (str->at(split))
+				{
+				case '+':
+					sign = 1;
+					str->erase(0, split + 1);
+					break;
+				case '-':
+					sign = -1;
+					str->erase(0, split + 1);
+					break;
+				default:
+					break;
+				}
+
+				dice_end = str->find_first_not_of("1234567890 ", 0);
+
+				if (dice_end == 0)return GETDICE_FAIL;
+				if (isFirst) {
+					face = atoi(str->substr(0, dice_end).c_str());
+					if (face == 0)return GETDICE_FAIL;
+				}
+				else {
+					dice = atoi(str->substr(0, dice_end).c_str());
+					if (dice == 0)return GETDICE_FAIL;
+					face = 1;
+				}
+				str->erase(0, dice_end);
+				reset(sign, dice, face, keep);
+				return GETDICE_DONE;
+			}
+			else {
+				dice = atoi(str->substr(0, pos_of_d).c_str());
+				if (dice == 0) {
+					split = str->find_first_not_of(' ');
+					switch (str->at(split))
+					{
+					case '+':
+						sign = 1;
+						str->erase(0, split + 1);
+						break;
+					case '-':
+						sign = -1;
+						str->erase(0, split + 1);
+						break;
+					default:
+						break;
+					}
+					dice_end = str->find_first_not_of("1234567890 ", 0);
+					if (dice_end == 0)return GETDICE_FAIL;
+					dice = atoi(str->substr(0, dice_end).c_str());
+					if (dice == 0)return GETDICE_FAIL;
+					face = 1;
+					str->erase(0, dice_end);
+					reset(sign, dice, face, keep);
+					return GETDICE_DONE;
+				}
+				if (dice < 0) { dice = -dice; sign = -1; }
+
+				
+			}
+		}
+		else {
+
+		}
+		return GETDICE_DONE;
+	}
+
+	int getDice_old(string * str) {
+		if (str->length() < 3) {
+			return GETDICE_FAIL;
 		}
 		size_t split = str->find_first_of("+-",1);
 		int endOfRoll;
@@ -95,7 +178,6 @@ public:
 			flag_no_dice = true;
 			dice = atoi(roll_string.c_str());
 			if (dice <= 0 || dice == INT32_MAX || dice == INT32_MIN) {
-				str->erase(0, endOfRoll);
 				return GETDICE_FAIL;
 			}
 			reset(sign, dice, 1, keep);

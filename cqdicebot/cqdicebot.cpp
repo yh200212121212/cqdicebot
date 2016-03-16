@@ -1,9 +1,9 @@
 #include "stdafx.h"
+#include "diceStringParser.h"
 using namespace std;
 
 int authcode = -1;
 bool enabled = false;
-mt19937 mtrand;
 CQEVENT(const char*, AppInfo, 0)() {
 	return CQAPPINFO;
 }
@@ -25,8 +25,7 @@ CQEVENT(int32_t, __eventExit, 0)() {
 
 //Type=1003 应用已被启用
 CQEVENT(int32_t, __eventEnable, 0)() {
-	random_device rdd;
-	mtrand.seed(rdd());
+	enabled = true;
 	return 0;
 }
 
@@ -42,7 +41,11 @@ CQEVENT(int32_t, __eventPrivateMsg, 24)(int32_t subType, int32_t sendTime, int64
 
 	//如果要回复消息，请调用酷Q方法发送，并且这里 return EVENT_BLOCK - 截断本条消息，不再继续处理  注意：应用优先级设置为"最高"(10000)时，不得使用本返回值
 	//如果不回复消息，交由之后的应用/过滤器处理，这里 return EVENT_IGNORE - 忽略本条消息
-	return EVENT_IGNORE;
+	if (!enabled) return EVENT_IGNORE;
+	stringstream qqinfo;
+	qqinfo << CQ_getStrangerInfo(authcode, fromQQ, (CQBOOL)1);
+	CQ_sendPrivateMsg(authcode, fromQQ, qqinfo.str().c_str());
+	return EVENT_BLOCK;
 }
 
 
@@ -58,9 +61,12 @@ CQEVENT(int32_t, __eventGroupMsg, 36)(int32_t subType, int32_t sendTime, int64_t
 CQEVENT(int32_t, __eventDiscussMsg, 32)(int32_t subType, int32_t sendTime, int64_t fromDiscuss, int64_t fromQQ, const char *msg, int32_t font) {
 
 	if(!enabled) return EVENT_IGNORE; //关于返回值说明, 见“_eventPrivateMsg”函数
-	unsigned int random_int = mtrand();
+	diceStringParser dsp(msg);
 	stringstream ret;
-	ret << random_int;
-	CQ_sendDiscussMsg(authcode, fromDiscuss, ret.str().c_str());
+	dsp.rollDice();
+	if (dsp.getStatus() == PARSE_OUTPUT_GENERATED) {
+		ret << fromQQ << "检定" << dsp.getName() << "，结果为：" << dsp.getRoll();
+		CQ_sendDiscussMsg(authcode, fromDiscuss, ret.str().c_str());
+	}
 	return EVENT_BLOCK;
 }
